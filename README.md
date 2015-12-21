@@ -1,4 +1,4 @@
-#WCF CLIENT DEMO
+#WCF CLIENT DEMO [![Build status](https://ci.appveyor.com/api/projects/status/ea815p4vm4mu7wac?svg=true)](https://ci.appveyor.com/project/skazantsev/wcf-client-demo)
 A simple application demonstrating interaction with WCF services using ChannelFactory. 
 
 According to [Michèle Leroux Bustamante's article](http://devproconnections.com/net-framework/wcf-proxies-cache-or-not-cache) the ChannelFactory is cached and a new WCF channel is created on each call.
