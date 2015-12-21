@@ -13,30 +13,36 @@ namespace Client
 
         private static readonly ClientSection _clientSection = ConfigurationManager.GetSection("system.serviceModel/client") as ClientSection;
 
-        public TResult InvokeService<TService, TResult>(Func<TService, TResult> serviceMethod)
-            where TService : class
+        public void InvokeService<TService>(Action<TService> serviceMethod) where TService : class
         {
-            var endpointNameAddressPair = GetEndpointNameAddressPair(typeof(TService));
-            var channel = _factoryManager.CreateChannel<TService>(endpointNameAddressPair.Key, endpointNameAddressPair.Value);
+            var channel = CreateChannel<TService>();
+            try
+            {
+                serviceMethod(channel);
+            }
+            finally
+            {
+                DisposeChannel(channel);
+            }
+        }
+
+        public TResult InvokeService<TService, TResult>(Func<TService, TResult> serviceMethod) where TService : class
+        {
+            var channel = CreateChannel<TService>();
             try
             {
                 return serviceMethod(channel);
             }
             finally
             {
-                var commObj = (ICommunicationObject)channel;
-                try
-                {
-                    if (commObj.State != CommunicationState.Faulted)
-                    {
-                        commObj.Close();
-                    }
-                }
-                catch
-                {
-                    commObj.Abort();
-                }
+                DisposeChannel(channel);
             }
+        }
+
+        private static TService CreateChannel<TService>() where TService : class
+        {
+            var endpointNameAddressPair = GetEndpointNameAddressPair(typeof(TService));
+            return _factoryManager.CreateChannel<TService>(endpointNameAddressPair.Key, endpointNameAddressPair.Value);
         }
 
         private static KeyValuePair<string, string> GetEndpointNameAddressPair(Type serviceContractType)
@@ -52,5 +58,20 @@ namespace Client
             throw new ConfigurationErrorsException($"No client endpoint found for type {serviceContractType}.");
         }
 
+        private static void DisposeChannel<TService>(TService channel) where TService : class
+        {
+            var commObj = (ICommunicationObject)channel;
+            try
+            {
+                if (commObj.State != CommunicationState.Faulted)
+                {
+                    commObj.Close();
+                }
+            }
+            catch
+            {
+                commObj.Abort();
+            }
+        }
     }
 }

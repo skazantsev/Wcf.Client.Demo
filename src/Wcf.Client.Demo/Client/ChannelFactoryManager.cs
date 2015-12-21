@@ -12,7 +12,7 @@ namespace Client
 
         public virtual T CreateChannel<T>(string endpointConfigurationName, string endpointAddress) where T : class
         {
-            T local = GetFactory<T>(endpointConfigurationName, endpointAddress).CreateChannel();
+            var local = GetFactory<T>(endpointConfigurationName, endpointAddress).CreateChannel();
             ((IClientChannel)local).Faulted += ChannelFaulted;
             return local;
         }
@@ -75,10 +75,10 @@ namespace Client
             var genericArguments = factory.GetType().GetGenericArguments();
             if (genericArguments.Length == 1)
             {
-                Type key = genericArguments[0];
-                if (_channelFactoryCache.ContainsKey(key))
+                var type = genericArguments[0];
+                if (_channelFactoryCache.ContainsKey(type))
                 {
-                    _channelFactoryCache.Remove(key);
+                    _channelFactoryCache.Remove(type);
                 }
             }
             throw new CommunicationObjectFaultedException($"A factory {factory.GetType().FullName} is faulted");
