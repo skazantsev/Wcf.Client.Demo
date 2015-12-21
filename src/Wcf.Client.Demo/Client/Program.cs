@@ -16,7 +16,7 @@ namespace Client
 
         private static async Task<double> MakeCall()
         {
-            var result = await _invoker.InvokeService<ICalculatorService, Task<double>>(async x => await x.Multiply(5, 6));
+            var result = await _invoker.InvokeService(async (ICalculatorService x) => await x.Multiply(5, 6));
             return result;
         }
     }
