@@ -50,6 +50,7 @@
     <Compile Include="IServiceInvoker.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="OutputManager.cs" />
     <Compile Include="ServiceInvoker.cs" />
   </ItemGroup>
   <ItemGroup>
