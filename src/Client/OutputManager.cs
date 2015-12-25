@@ -14,7 +14,7 @@ namespace Client
 
         public async Task<string> GetOutput()
         {
-            var result = await _serviceInvoker.InvokeService(async (ICalculatorService x) => await x.Multiply(5, 6));
+            var result = await _serviceInvoker.InvokeService((ICalculatorService x) => x.Multiply(5, 6));
             return string.Format($"Result is: {result}");
         }
     }

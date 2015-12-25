@@ -6,7 +6,7 @@ namespace Client
     {
         public static void Main()
         {
-            var output = new OutputManager(new ServiceInvoker()).GetOutput();
+            var output = new OutputManager(new ServiceInvoker()).GetOutput().Result;
             Console.WriteLine(output);
         }
     }
